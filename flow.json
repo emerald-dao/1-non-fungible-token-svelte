@@ -36,13 +36,37 @@
 				"testnet": "0x631e88ae7f1d7c20",
 				"mainnet": "0x1d7e57aa55817448"
 			}
-		}
+		},
+		"ExampleNFT": "./src/lib/flow/cadence/contracts/ExampleNFT.cdc"
 	},
 	"accounts": {
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
 			"key": "fc49a771829ff480841164af13b18a68cd697b6e79c80af7f8470a9e651dfac5"
+		},
+		"testnet-account": {
+		  "address": "0x5a2e5e1477403ee5",
+		  "key": {
+			"type": "hex",
+			"index": 0,
+			"signatureAlgorithm": "ECDSA_P256",
+			"hashAlgorithm": "SHA3_256",
+			"privateKey": "43141229864fcae3b1962108686d422deed425206df6003314cc080a7c07a0f8"
+		  }
 		}
 	},
-	"deployments": {}
+	"deployments": {
+		"emulator": {
+		  "emulator-account": [
+			"NonFungibleToken",
+			"MetadataViews",
+			"ExampleNFT"
+			  ]
+		},
+		"testnet": {
+		  "testnet-account": [
+			"ExampleNFT"
+			  ]
+		}
+	  }
 }
