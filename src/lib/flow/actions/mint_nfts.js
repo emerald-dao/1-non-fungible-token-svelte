@@ -1,7 +1,7 @@
-import '../config';
+require('../config');
 import * as fcl from '@onflow/fcl';
 import mintNftsTx from '../cadence/transactions/mint_nfts.cdc?raw';
-import replaceWithProperImports from '$flow/utils/replaceWithProperImports';
+import replaceWithProperImports from '../utils/replaceWithProperImports';
 
 async function mintNFTs(recipient) {
 	const names = ['Education', 'Building', 'Governance'];
