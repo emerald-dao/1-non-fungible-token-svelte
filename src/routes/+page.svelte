@@ -1,5 +1,17 @@
 <script type="ts">
+	import getNFTs from '$flow/actions/getNfts';
+	import setupCollection from '$flow/actions/setupCollection';
+	import executeTransaction from '$flow/utils/executeTransaction';
 	import dappData from '$lib/config/dappData';
+	import { user } from '$stores/UserStore';
+
+	let nfts;
+
+	const handleGetGreeting = async () => {
+		if ($user) {
+			nfts = await getNFTs($user.addr);
+		}
+	};
 </script>
 
 <section class="container">
@@ -7,6 +19,18 @@
 	<h1>{dappData.title}</h1>
 	<p>{dappData.description}</p>
 	<p>Crafted by {dappData.author}</p>
+	<section>
+		<div class="row-4">
+			<button on:click={() => executeTransaction(() => setupCollection())}>Setup collection</button>
+			<button on:click={handleGetGreeting}>Get NFTs</button>
+		</div>
+
+		{#if nfts}
+			{#each nfts as nft}
+				{nft.name}
+			{/each}
+		{/if}
+	</section>
 </section>
 
 <style type="scss">
