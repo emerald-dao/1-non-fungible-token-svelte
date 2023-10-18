@@ -1,5 +1,5 @@
 import { config } from '@onflow/fcl';
-import flowJson from '../flow.json';
+import flowJson from '../../flow.json';
 
 export const network: 'mainnet' | 'testnet' | 'emulator' = process.env.PUBLIC_FLOW_NETWORK as
     | 'mainnet'

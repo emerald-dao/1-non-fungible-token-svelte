@@ -1,7 +1,7 @@
 require('dotenv').config();
-import { serverAuthorization } from './auth/authorization';
+import { serverAuthorization } from './flow/utils/authorization';
 import { mutate } from '@onflow/fcl';
-import { EXAMPLE_NFT_CONTRACT_ADDRESS, NON_FUNGIBLE_TOKEN_CONTRACT_ADDRESS } from './config';
+import { EXAMPLE_NFT_CONTRACT_ADDRESS, NON_FUNGIBLE_TOKEN_CONTRACT_ADDRESS } from './flow/config';
 
 async function mintScript(recipient: string) {
     const names = ['Education', 'Building', 'Governance'];
@@ -34,8 +34,9 @@ async function mintScript(recipient: string) {
                 execute {
                     var i = 0
                     while i < names.length {
-                    ExampleNFT.mintNFT(recipient: self.RecipientCollection, name: names[i], description: descriptions[i], thumbnail: thumbnails[i])
-                    i = i + 1
+                        let extraMetadata: {String: AnyStruct} = {}
+                        ExampleNFT.mintNFT(recipient: self.RecipientCollection, name: names[i], description: descriptions[i], thumbnail: thumbnails[i], extraMetadata: extraMetadata)
+                        i = i + 1
                     }
                 }
             }
