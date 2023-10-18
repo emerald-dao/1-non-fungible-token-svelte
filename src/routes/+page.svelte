@@ -1,11 +1,13 @@
 <script type="ts">
 	import getNFTs from '$flow/actions/getNfts';
 	import setupCollection from '$flow/actions/setupCollection';
+	import transfer from '$flow/actions/transfer';
 	import executeTransaction from '$flow/utils/executeTransaction';
 	import dappData from '$lib/config/dappData';
 	import { user } from '$stores/UserStore';
 
 	let nfts;
+	let recipientId;
 
 	const handleGetGreeting = async () => {
 		if ($user) {
@@ -26,9 +28,18 @@
 		</div>
 
 		{#if nfts}
-			{#each nfts as nft}
-				{nft.name}
-			{/each}
+			<div style="background-color:antiquewhite;">
+				<img
+					src={`https://cloudflare-ipfs.com/ipfs/${nfts[0].thumbnail.url}`}
+					width={150}
+					alt="NFT logo"
+				/>
+				<p style="color: black;">{nfts[0].name}</p>
+				<input type="text" style="color: black;" bind:value={recipientId} />
+				<button on:click={() => executeTransaction(() => transfer(recipientId, nfts[0].id))}
+					>Transfer</button
+				>
+			</div>
 		{/if}
 	</section>
 </section>
