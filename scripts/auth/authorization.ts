@@ -1,11 +1,11 @@
-const fcl = require("@onflow/fcl");
-const { SHA3 } = require("sha3");
-var EC = require('elliptic').ec;
-var ec = new EC('p256');
-require('dotenv').config();
+import * as fcl from '@onflow/fcl';
+import { SHA3 } from 'sha3';
+import { ec } from 'elliptic';
+import { EXAMPLE_NFT_CONTRACT_ADDRESS } from '../config';
+var ecObj = new ec('p256');
 
 const sign = (message) => {
-  const key = ec.keyFromPrivate(Buffer.from(process.env.PRIVATE_KEY, "hex"));
+  const key = ecObj.keyFromPrivate(Buffer.from(process.env.PRIVATE_KEY, "hex"));
   const sig = key.sign(hash(message)); // hashMsgHex -> hash
   const n = 32;
   const r = sig.r.toArrayLike(Buffer, "be", n);
@@ -19,9 +19,8 @@ const hash = (message) => {
   return sha.digest();
 }
 
-const serverAuthorization = async (account) => {
-
-  const addr = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+export const serverAuthorization = async (account) => {
+  const addr = EXAMPLE_NFT_CONTRACT_ADDRESS;
   const keyId = 0;
 
   return {
@@ -37,8 +36,4 @@ const serverAuthorization = async (account) => {
       }
     }
   }
-}
-
-module.exports = {
-  serverAuthorization
 }

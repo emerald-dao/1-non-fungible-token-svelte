@@ -9,8 +9,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
-		"mint": "node ./src/lib/flow/actions/mint_nfts.js",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"mint": "ts-node ./scripts/mint.ts"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.19.1",
