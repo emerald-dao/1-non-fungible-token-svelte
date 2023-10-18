@@ -3,6 +3,7 @@
 // very similar to how many NFTs would implement the core functionality.
 import NonFungibleToken from "./utility/NonFungibleToken.cdc"
 import MetadataViews from "./utility/MetadataViews.cdc"
+import FungibleToken from "./utility/FungibleToken.cdc"
 
 pub contract ExampleNFT: NonFungibleToken {
 
@@ -17,27 +18,37 @@ pub contract ExampleNFT: NonFungibleToken {
 
     pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver {
         pub let id: UInt64
-
         pub let name: String
         pub let description: String
         pub let thumbnail: String
+        pub let serial: UInt64
+        pub let extraMetadata: {String: AnyStruct}
 
         init(
             name: String,
             description: String,
-            thumbnail: String
+            thumbnail: String,
+            extraMetadata: {String: AnyStruct}
         ) {
             self.id = self.uuid
             self.name = name
             self.description = description
             self.thumbnail = thumbnail
+            self.serial = ExampleNFT.totalSupply
+            self.extraMetadata = extraMetadata
 
             ExampleNFT.totalSupply = ExampleNFT.totalSupply + 1
         }
     
         pub fun getViews(): [Type] {
             return [
-                Type<MetadataViews.Display>()
+                Type<MetadataViews.Display>(),
+                Type<MetadataViews.Serial>(),
+                Type<MetadataViews.Royalties>(),
+                Type<MetadataViews.ExternalURL>(),
+                Type<MetadataViews.NFTCollectionDisplay>(),
+                Type<MetadataViews.NFTCollectionData>(),
+                Type<MetadataViews.Traits>()
             ]
         }
 
@@ -51,6 +62,59 @@ pub contract ExampleNFT: NonFungibleToken {
                             url: self.thumbnail
                         )
                     )
+                case Type<MetadataViews.Serial>():
+                    return MetadataViews.Serial(
+                        self.serial
+                    )
+                case Type<MetadataViews.Royalties>():
+                    return MetadataViews.Royalties([
+                        MetadataViews.Royalty(
+                            receiver: ExampleNFT.account.getCapability<&{FungibleToken.Receiver}>(/public/flowTokenReceiver),
+                            cut: 0.05,
+                            description: "Royalty for creating the NFTs."
+                        )   
+                    ])
+                case Type<MetadataViews.ExternalURL>():
+                    return MetadataViews.ExternalURL("https://academy.ecdao.org/en/quickstarts/1-non-fungible-token")
+                case Type<MetadataViews.NFTCollectionData>():
+                    return MetadataViews.NFTCollectionData(
+                        storagePath: ExampleNFT.CollectionStoragePath,
+                        publicPath: ExampleNFT.CollectionPublicPath,
+                        providerPath: /private/exampleNFTCollection,
+                        publicCollection: Type<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, MetadataViews.ResolverCollection}>(),
+                        publicLinkedType: Type<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, MetadataViews.ResolverCollection}>(),
+                        providerLinkedType: Type<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, NonFungibleToken.Provider, MetadataViews.ResolverCollection}>(),
+                        createEmptyCollectionFunction: (fun (): @NonFungibleToken.Collection {
+                            return <-ExampleNFT.createEmptyCollection()
+                        })
+                    )
+                case Type<MetadataViews.NFTCollectionDisplay>():
+                    let media = MetadataViews.Media(
+                        file: MetadataViews.HTTPFile(
+                            url: "https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg"
+                        ),
+                        mediaType: "image/svg+xml"
+                    )
+                    return MetadataViews.NFTCollectionDisplay(
+                        name: "The Example Collection",
+                        description: "This collection is used as an example to help you develop your next Flow NFT.",
+                        externalURL: MetadataViews.ExternalURL("https://academy.ecdao.org/en/quickstarts/1-non-fungible-token"),
+                        squareImage: media,
+                        bannerImage: media,
+                        socials: {
+                            "twitter": MetadataViews.ExternalURL("https://twitter.com/emerald_dao")
+                        }
+                    )
+                case Type<MetadataViews.Traits>():
+                    // exclude mintedTime and foo to show other uses of Traits
+                    let excludedTraits: [String] = ["mintedTime", "foo"]
+                    let traitsView: MetadataViews.Traits = MetadataViews.dictToTraits(dict: self.extraMetadata, excludedNames: excludedTraits)
+
+                    // mintedTime is a unix timestamp, we should mark it with a displayType so platforms know how to show it.
+                    let mintedTimeTrait: MetadataViews.Trait = MetadataViews.Trait(name: "mintedTime", value: self.extraMetadata["mintedTime"]!, displayType: "Date", rarity: nil)
+                    traitsView.addTrait(mintedTimeTrait)
+
+                    return traitsView
             }
             return nil
         }
@@ -120,14 +184,20 @@ pub contract ExampleNFT: NonFungibleToken {
         recipient: &ExampleNFT.Collection{NonFungibleToken.CollectionPublic},
         name: String,
         description: String,
-        thumbnail: String
+        thumbnail: String,
+        extraMetadata: {String: AnyStruct}
     ) {
+        let currentBlock = getCurrentBlock()
+        extraMetadata["mintedBlock"] = currentBlock.height
+        extraMetadata["mintedTime"] = currentBlock.timestamp
+        extraMetadata["minter"] = recipient.owner!.address
 
         // create a new NFT
         var newNFT <- create NFT(
             name: name,
             description: description,
-            thumbnail: thumbnail
+            thumbnail: thumbnail,
+            extraMetadata: extraMetadata
         )
 
         // deposit it in the recipient's account using their reference
