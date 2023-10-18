@@ -1,19 +1,12 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "outDir": "build",
+    "checkJs": true,
     "strict": false,
-    "noImplicitAny": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "lib": [
-      "es6"
-    ],
-    "types": [
-      "node"
-    ]
-  },
-  "ts-node": {
-    "transpileOnly": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "sourceMap": true
   }
 }

@@ -1,7 +1,9 @@
+require('dotenv').config();
 import { serverAuthorization } from './auth/authorization';
-import mintNFTs from '../src/lib/flow/actions/mintNFTs'
+import { mutate } from '@onflow/fcl';
+import { EXAMPLE_NFT_CONTRACT_ADDRESS, NON_FUNGIBLE_TOKEN_CONTRACT_ADDRESS } from './config';
 
-async function mintScript(recipient) {
+async function mintScript(recipient: string) {
     const names = ['Education', 'Building', 'Governance'];
     const descriptions = [
         'This is the logo of the Education Guild',
@@ -15,7 +17,42 @@ async function mintScript(recipient) {
     ];
 
     try {
-        return await mintNFTs(recipient, names, descriptions, thumbnails, serverAuthorization)
+        const transactionId = await mutate({
+            cadence: `
+            import ExampleNFT from ${EXAMPLE_NFT_CONTRACT_ADDRESS}
+            import NonFungibleToken from ${NON_FUNGIBLE_TOKEN_CONTRACT_ADDRESS}
+
+            transaction(names: [String], descriptions: [String], thumbnails: [String], recipient: Address) {
+                let RecipientCollection: &ExampleNFT.Collection{NonFungibleToken.CollectionPublic}
+                
+                prepare(signer: AuthAccount) {
+                    self.RecipientCollection = getAccount(recipient).getCapability(ExampleNFT.CollectionPublicPath)
+                                                .borrow<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic}>()
+                                                ?? panic("The recipient has not set up an ExampleNFT Collection yet.")
+                }
+
+                execute {
+                    var i = 0
+                    while i < names.length {
+                    ExampleNFT.mintNFT(recipient: self.RecipientCollection, name: names[i], description: descriptions[i], thumbnail: thumbnails[i])
+                    i = i + 1
+                    }
+                }
+            }
+            `,
+            args: (arg, t) => [
+                arg(names, t.Array(t.String)),
+                arg(descriptions, t.Array(t.String)),
+                arg(thumbnails, t.Array(t.String)),
+                arg(recipient, t.Address)
+            ],
+            proposer: serverAuthorization,
+            payer: serverAuthorization,
+            authorizations: [serverAuthorization],
+            limit: 999
+        });
+
+        console.log({ transactionId })
     } catch (e) {
         console.log(e);
     }

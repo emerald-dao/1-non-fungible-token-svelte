@@ -1,6 +1,7 @@
 import * as fcl from '@onflow/fcl';
 import { SHA3 } from 'sha3';
 import { ec } from 'elliptic';
+import { EXAMPLE_NFT_CONTRACT_ADDRESS } from '../config';
 var ecObj = new ec('p256');
 
 const sign = (message) => {
@@ -19,8 +20,7 @@ const hash = (message) => {
 }
 
 export const serverAuthorization = async (account) => {
-
-  const addr = process.env.PUBLIC_CONTRACT_ADDRESS;
+  const addr = EXAMPLE_NFT_CONTRACT_ADDRESS;
   const keyId = 0;
 
   return {

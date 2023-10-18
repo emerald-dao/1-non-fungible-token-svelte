@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@onflow/fcl": "^1.6.0",
+    "dotenv": "^16.3.1",
     "elliptic": "^6.5.4",
     "sha3": "^2.1.4"
   },
