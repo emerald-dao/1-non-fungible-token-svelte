@@ -1,5 +1,5 @@
-import ExampleNFT from "../ExampleNFT.cdc"
-import NonFungibleToken from "../utility/NonFungibleToken.cdc"
+import ExampleNFT from "../contracts/ExampleNFT.cdc"
+import NonFungibleToken from "../contracts/utility/NonFungibleToken.cdc"
 
 transaction(names: [String], descriptions: [String], thumbnails: [String], recipient: Address) {
   let RecipientCollection: &ExampleNFT.Collection{NonFungibleToken.CollectionPublic}
