@@ -1,6 +1,32 @@
 import ExampleNFT from "../contracts/ExampleNFT.cdc"
 import MetadataViews from "../contracts/utility/MetadataViews.cdc"
 
+pub fun main(address: Address): [NFT] {
+  let collection = getAccount(address).getCapability(ExampleNFT.CollectionPublicPath)
+                    .borrow<&ExampleNFT.Collection{MetadataViews.ResolverCollection}>()
+                    ?? panic("Could not borrow a reference to the collection")
+
+  let answer: [NFT] = []
+
+  for id in collection.getIDs() {
+    // Get the basic display information for this NFT
+    let nft: &{MetadataViews.Resolver} = collection.borrowViewResolver(id: id)
+    // Get the basic display information for this NFT
+    let view: AnyStruct = nft.resolveView(Type<MetadataViews.Display>())!
+    let display: MetadataViews.Display = view as! MetadataViews.Display
+    answer.append(
+      NFT(
+        id: id, 
+        name: display.name, 
+        description: display.description, 
+        thumbnail: display.thumbnail
+      )
+    )
+  }
+
+  return answer
+}
+
 pub struct NFT {
   pub let id: UInt64
   pub let name: String 
@@ -13,32 +39,4 @@ pub struct NFT {
     self.description = description
     self.thumbnail = thumbnail
   }
-}
-
-pub fun main(address: Address): [NFT] {
-  let collection = getAccount(address).getCapability(ExampleNFT.CollectionPublicPath)
-                    .borrow<&ExampleNFT.Collection{MetadataViews.ResolverCollection}>()
-                    ?? panic("Could not borrow a reference to the collection")
-
-  let ids = collection.getIDs()
-
-  let answer: [NFT] = []
-
-  for id in ids {
-    // Get the basic display information for this NFT
-    let nft = collection.borrowViewResolver(id: id)
-    // Get the basic display information for this NFT
-    let view = nft.resolveView(Type<MetadataViews.Display>())!
-    let display = view as! MetadataViews.Display
-    answer.append(
-      NFT(
-        id: id, 
-        name: display.name, 
-        description: display.description, 
-        thumbnail: display.thumbnail
-      )
-    )
-  }
-
-  return answer
 }

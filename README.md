@@ -1,23 +1,5 @@
-# Emerald Boilerplate
+# 💎 Emerald Academy
 
-SvelteKit Boilerplate for creating Flow dapps.
+## 🚩 Quickstart 1: Non Fungible Token
 
-## Features
-
-- [Flow Client Library](https://developers.flow.com/tools/fcl-js)
-- [Emerald Component Library](https://github.com/emerald-dao/component-library)
-- [Typescript](https://www.typescriptlang.org/)
-- [SCSS/SASS](https://sass-lang.com/)
-- [PostCSS](https://postcss.org/)
-  - [CSSNano](https://cssnano.co/)
-  - [Autoprefixer](https://github.com/postcss/autoprefixer)
-- [Prettier](https://prettier.io/)
-- [Eslint](https://eslint.org/)
-- [Iconify](https://docs.iconify.design/icon-components/svelte/)
-
-## Project Setup
-
-1. `npx degit emerald-dao/boilerplate my-app` or Clone this repository.
-2. `npm install` or `yarn install` or `pnpm install`.
-3. `npm run dev` or `yarn run dev` or `pnpm run dev`.
-4. Enjoy building on [Flow](https://flow.com/)
+View a whole walkthrough of this quest [here](https://academy.ecdao.org/en/quickstarts/1-non-fungible-token-svelte).

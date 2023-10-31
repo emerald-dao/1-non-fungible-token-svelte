@@ -7,13 +7,15 @@ transaction(recipient: Address, withdrawID: UInt64) {
   
   prepare(signer: AuthAccount) {
     self.ProviderCollection = signer.borrow<&ExampleNFT.Collection{NonFungibleToken.Provider}>(from: ExampleNFT.CollectionStoragePath)
-                                ?? panic("This user does not have a Collection.")
+                                ?? panic("The signer does not have an ExampleNFT Collection set up.")
 
     self.RecipientCollection = getAccount(recipient).getCapability(ExampleNFT.CollectionPublicPath)
-                                .borrow<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic}>()!
+                                .borrow<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic}>()
+                                ?? panic("The recipient does not have an ExampleNFT Collection set up.")
   }
 
   execute {
-    self.RecipientCollection.deposit(token: <- self.ProviderCollection.withdraw(withdrawID: withdrawID))
+    let nft: @NonFungibleToken.NFT <- self.ProviderCollection.withdraw(withdrawID: withdrawID)
+    self.RecipientCollection.deposit(token: <- nft)
   }
 }

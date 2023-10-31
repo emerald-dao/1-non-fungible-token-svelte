@@ -51,7 +51,7 @@
 	{logIn}
 	{unauthenticate}
 	logoUrl="/ea-logo.png"
-	logoText="Hello World Quickstart"
+	logoText="Non Fungible Token Quickstart"
 />
 <main>
 	<section class="container-small">

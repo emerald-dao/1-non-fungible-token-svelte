@@ -1,11 +1,9 @@
-// This is an example implementation of a Flow Non-Fungible Token
-// It is not part of the official standard but it assumed to be
-// very similar to how many NFTs would implement the core functionality.
 import NonFungibleToken from "./utility/NonFungibleToken.cdc"
 import MetadataViews from "./utility/MetadataViews.cdc"
 import FungibleToken from "./utility/FungibleToken.cdc"
+import ViewResolver from "./utility/ViewResolver.cdc"
 
-pub contract ExampleNFT: NonFungibleToken {
+pub contract ExampleNFT: NonFungibleToken, ViewResolver {
 
     pub var totalSupply: UInt64
 
@@ -75,36 +73,11 @@ pub contract ExampleNFT: NonFungibleToken {
                         )   
                     ])
                 case Type<MetadataViews.ExternalURL>():
-                    return MetadataViews.ExternalURL("https://academy.ecdao.org/en/quickstarts/1-non-fungible-token")
+                    return MetadataViews.ExternalURL("https://academy.ecdao.org/en/quickstarts/1-non-fungible-token-svelte")
                 case Type<MetadataViews.NFTCollectionData>():
-                    return MetadataViews.NFTCollectionData(
-                        storagePath: ExampleNFT.CollectionStoragePath,
-                        publicPath: ExampleNFT.CollectionPublicPath,
-                        providerPath: /private/exampleNFTCollection,
-                        publicCollection: Type<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, MetadataViews.ResolverCollection}>(),
-                        publicLinkedType: Type<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, MetadataViews.ResolverCollection}>(),
-                        providerLinkedType: Type<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, NonFungibleToken.Provider, MetadataViews.ResolverCollection}>(),
-                        createEmptyCollectionFunction: (fun (): @NonFungibleToken.Collection {
-                            return <-ExampleNFT.createEmptyCollection()
-                        })
-                    )
+                    return ExampleNFT.resolveView(view)
                 case Type<MetadataViews.NFTCollectionDisplay>():
-                    let media = MetadataViews.Media(
-                        file: MetadataViews.HTTPFile(
-                            url: "https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg"
-                        ),
-                        mediaType: "image/svg+xml"
-                    )
-                    return MetadataViews.NFTCollectionDisplay(
-                        name: "The Example Collection",
-                        description: "This collection is used as an example to help you develop your next Flow NFT.",
-                        externalURL: MetadataViews.ExternalURL("https://academy.ecdao.org/en/quickstarts/1-non-fungible-token"),
-                        squareImage: media,
-                        bannerImage: media,
-                        socials: {
-                            "twitter": MetadataViews.ExternalURL("https://twitter.com/emerald_dao")
-                        }
-                    )
+                    return ExampleNFT.resolveView(view)
                 case Type<MetadataViews.Traits>():
                     // exclude mintedTime and foo to show other uses of Traits
                     let excludedTraits: [String] = ["mintedTime", "foo"]
@@ -124,10 +97,6 @@ pub contract ExampleNFT: NonFungibleToken {
         // dictionary of NFT conforming tokens
         // NFT is a resource type with an `UInt64` ID field
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
-
-        init () {
-            self.ownedNFTs <- {}
-        }
 
         // withdraw removes an NFT from the collection and moves it to the caller
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
@@ -168,6 +137,10 @@ pub contract ExampleNFT: NonFungibleToken {
             return exampleNFT as &AnyResource{MetadataViews.Resolver}
         }
 
+        init () {
+            self.ownedNFTs <- {}
+        }
+
         destroy() {
             destroy self.ownedNFTs
         }
@@ -204,6 +177,48 @@ pub contract ExampleNFT: NonFungibleToken {
         recipient.deposit(token: <-newNFT)
     }
     
+
+    pub fun getViews(): [Type] {
+        return [
+            Type<MetadataViews.NFTCollectionDisplay>(),
+            Type<MetadataViews.NFTCollectionData>()
+        ]
+    }
+
+    pub fun resolveView(_ view: Type): AnyStruct? {
+        switch view {
+            case Type<MetadataViews.NFTCollectionData>():
+                return MetadataViews.NFTCollectionData(
+                    storagePath: ExampleNFT.CollectionStoragePath,
+                    publicPath: ExampleNFT.CollectionPublicPath,
+                    providerPath: /private/exampleNFTCollection,
+                    publicCollection: Type<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, MetadataViews.ResolverCollection}>(),
+                    publicLinkedType: Type<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, MetadataViews.ResolverCollection}>(),
+                    providerLinkedType: Type<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, NonFungibleToken.Provider, MetadataViews.ResolverCollection}>(),
+                    createEmptyCollectionFunction: (fun (): @NonFungibleToken.Collection {
+                        return <-ExampleNFT.createEmptyCollection()
+                    })
+                )
+            case Type<MetadataViews.NFTCollectionDisplay>():
+                let media = MetadataViews.Media(
+                    file: MetadataViews.HTTPFile(
+                        url: "https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg"
+                    ),
+                    mediaType: "image/svg+xml"
+                )
+                return MetadataViews.NFTCollectionDisplay(
+                    name: "The Example Collection",
+                    description: "This collection is used as an example to help you develop your next Flow NFT.",
+                    externalURL: MetadataViews.ExternalURL("https://academy.ecdao.org/en/quickstarts/1-non-fungible-token"),
+                    squareImage: media,
+                    bannerImage: media,
+                    socials: {
+                        "twitter": MetadataViews.ExternalURL("https://twitter.com/emerald_dao")
+                    }
+                )
+        }
+        return nil
+    }
 
     init() {
         // Initialize the total supply

@@ -5,7 +5,6 @@ function replaceWithProperImports(cadence: String) {
 	let broken = cadence.split(/\s/g);
 	for (let i = 0; i < broken.length; i++) {
 		if (broken[i] == 'import' && broken[i + 2] == 'from') {
-			console.log('Contract Import Replace', broken[i + 1]);
 			let contractAddress = flowJson.contracts[broken[i + 1]].aliases[network];
 			if (!contractAddress.startsWith('0x')) {
 				contractAddress = '0x' + contractAddress;

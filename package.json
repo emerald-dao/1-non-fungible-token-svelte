@@ -15,7 +15,7 @@
 	},
 	"devDependencies": {
 		"@babel/core": "^7.19.1",
-		"@emerald-dao/component-library": "^6.0.0",
+		"@emerald-dao/component-library": "^6.5.0",
 		"@emerald-dao/design-system": "^2.1.0",
 		"@iconify/svelte": "^3.0.0",
 		"@sveltejs/adapter-auto": "next",

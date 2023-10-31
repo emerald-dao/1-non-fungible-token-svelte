@@ -51,13 +51,12 @@
 		</div>
 	</Card.Section>
 	<Card.Section>
-		<span class="w-medium small">2. Transfer NFTs to your account.</span>
-		<span class="small"
-			>Time to go back to your terminal! Look for the scripts directory and execute the <code
-				>mint</code
-			>
-			function.</span
-		>
+		<span class="w-medium small">2. Mint NFTs to your account.</span>
+		<span class="small">
+			Time to go back to your terminal! Look for the scripts directory and execute the
+			<code>mint</code>
+			function.
+		</span>
 	</Card.Section>
 	<Card.Section>
 		<span class="w-medium small">3. Get NFTs</span>
