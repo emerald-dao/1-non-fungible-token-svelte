@@ -21,8 +21,7 @@
 	<div class="column-2">
 		<h3><strong>setupCollection</strong> transaction</h3>
 		<p class="small">
-			This is the FCL code that runs a transaction to setup a collection vault for the connected
-			user.
+			This is the FCL code that runs a transaction to setup a collection for the connected user.
 		</p>
 	</div>
 </CodeBlockModal>

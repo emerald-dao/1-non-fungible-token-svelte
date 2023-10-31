@@ -4,7 +4,7 @@ import flowJson from '../../flow.json';
 export const network: 'mainnet' | 'testnet' | 'emulator' = process.env.PUBLIC_FLOW_NETWORK as
     | 'mainnet'
     | 'testnet'
-    | 'emulator';
+    | 'emulator' || 'emulator';
 
 export const EXAMPLE_NFT_CONTRACT_ADDRESS = flowJson.contracts.ExampleNFT.aliases[network];
 export const NON_FUNGIBLE_TOKEN_CONTRACT_ADDRESS = flowJson.contracts.NonFungibleToken.aliases[network];

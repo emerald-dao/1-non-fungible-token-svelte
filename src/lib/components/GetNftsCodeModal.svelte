@@ -20,7 +20,9 @@
 <CodeBlockModal id="get-greeting-transaction" {codeBlocks} codeBlockType="script">
 	<div class="column-2">
 		<h3 class="large"><strong>getNfts</strong> script</h3>
-		<p class="small">This is the FCL code that fetches the NFTs from the connected user vault.</p>
+		<p class="small">
+			This is the FCL code that fetches the NFTs from the connected user's collection.
+		</p>
 	</div>
 </CodeBlockModal>
 

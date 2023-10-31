@@ -4,8 +4,10 @@ import { ec } from 'elliptic';
 import { EXAMPLE_NFT_CONTRACT_ADDRESS } from '../config';
 var ecObj = new ec('p256');
 
+const privateKey = process.env.PRIVATE_KEY || 'fc49a771829ff480841164af13b18a68cd697b6e79c80af7f8470a9e651dfac5';
+
 const sign = (message) => {
-  const key = ecObj.keyFromPrivate(Buffer.from(process.env.PRIVATE_KEY, "hex"));
+  const key = ecObj.keyFromPrivate(Buffer.from(privateKey, "hex"));
   const sig = key.sign(hash(message)); // hashMsgHex -> hash
   const n = 32;
   const r = sig.r.toArrayLike(Buffer, "be", n);

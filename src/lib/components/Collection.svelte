@@ -8,7 +8,7 @@
 
 <div class="main-wrapper column-3">
 	{#if $user?.addr}
-		<span class="title small w-medium">Your NFTs Vault</span>
+		<span class="title small w-medium">Your NFT Collection</span>
 		{#if nfts.length > 0}
 			<div class="nfts-wrapper">
 				{#each nfts as nft}
@@ -16,10 +16,10 @@
 				{/each}
 			</div>
 		{:else}
-			<span class="small"><em>Your vault is empty</em></span>
+			<span class="small"><em>Your collection is empty</em></span>
 		{/if}
 	{:else}
-		<span class="small"><em>Connect wallet to see the vault</em></span>
+		<span class="small"><em>Connect wallet to see your collection</em></span>
 	{/if}
 </div>
 

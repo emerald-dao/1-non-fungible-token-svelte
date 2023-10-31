@@ -5,7 +5,7 @@ import { env } from '$env/dynamic/public';
 export const network: 'mainnet' | 'testnet' | 'emulator' = env.PUBLIC_FLOW_NETWORK as
 	| 'mainnet'
 	| 'testnet'
-	| 'emulator';
+	| 'emulator' || 'emulator';
 
 const fclConfigInfo = {
 	emulator: {
