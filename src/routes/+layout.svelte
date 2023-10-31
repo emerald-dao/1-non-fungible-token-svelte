@@ -5,23 +5,15 @@
 	import '@emerald-dao/component-library/styles/app.scss';
 	import '../app.postcss';
 	import getFindProfile from '../lib/flow/utils/getFindProfile';
-	import { navElements, emeraldTools, socialMedia } from '$lib/config/navigation';
+	import { emeraldTools, socialMedia } from '$lib/config/navigation';
 	import type { User } from '@emerald-dao/component-library/models/user.interface';
-	import { theme } from '$stores/ThemeStore';
 	import { transaction } from '$stores/TransactionStore';
 	import { profile, user } from '$stores/UserStore';
 	import { logIn, unauthenticate } from '../lib/flow/actions/authentication';
 	import { Header, Footer, TransactionModal } from '@emerald-dao/component-library';
-	import { onMount } from 'svelte';
-	import { network } from '$flow/config';
-
-	onMount(() => {
-		let html = document.querySelector('html');
-
-		if (html) {
-			html.setAttribute('data-theme', $theme);
-		}
-	});
+	import { network } from '$lib/flow/config';
+	import QuickstartIntroduction from '$lib/components/QuickstartIntroduction.svelte';
+	import Blur from '$lib/components/Blur.svelte';
 
 	// When a user is connected we set the profile store to save the profile data
 	$: if ($user && $user.addr) {
@@ -52,15 +44,36 @@
 	on:close={() => transaction.resetTransaction()}
 />
 <Header
-	themeStore={theme}
 	user={$user}
 	profile={$profile}
 	{network}
 	transactionInProgress={$transaction.progress}
 	{logIn}
 	{unauthenticate}
+	logoUrl="/ea-logo.png"
+	logoText="Hello World Quickstart"
 />
 <main>
-	<slot />
+	<section class="container-small">
+		<QuickstartIntroduction />
+		<slot />
+		<Blur right="10%" top="45%" color="tertiary" />
+		<Blur left="10%" bottom="45%" />
+	</section>
 </main>
-<Footer {navElements} {emeraldTools} socials={socialMedia} />
+<Footer {emeraldTools} socials={socialMedia} logoUrl="ea-logo.png" logoText="Emerald Academy" />
+
+<style lang="scss">
+	main {
+		background-color: var(--clr-background-secondary);
+
+		section {
+			min-height: 50vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: var(--space-10);
+		}
+	}
+</style>
