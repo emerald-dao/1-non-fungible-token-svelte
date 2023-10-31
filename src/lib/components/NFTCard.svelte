@@ -25,7 +25,7 @@
 	</Card.Section>
 	<Card.Section>
 		<span class="w-medium small">Transfer NFT</span>
-		<div class="row-2">
+		<div class="column-2">
 			<input
 				class="input-field"
 				type="text"
@@ -34,6 +34,7 @@
 			/>
 			<Button
 				size="small"
+				width="full-width"
 				on:click={() => executeTransaction(() => transfer(nft.recipientId, nft.id))}
 				>Transfer</Button
 			>

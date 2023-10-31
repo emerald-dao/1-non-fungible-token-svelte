@@ -1,4 +1,6 @@
 <script type="ts">
+	import GetNftsCodeModal from '$lib/components/GetNftsCodeModal.svelte';
+	import SetupCollectionCodeModal from '$lib/components/SetupCollectionCodeModal.svelte';
 	import getNFTs from '$flow/actions/getNfts';
 	import setupCollection from '$flow/actions/setupCollection';
 	import executeTransaction from '$flow/utils/executeTransaction';
@@ -15,16 +17,26 @@
 			nfts = [];
 		}
 	}
+
+	const handleSetupCollection = async () => {
+		if ($user) {
+			await executeTransaction(() => setupCollection());
+		} else {
+			alert('Please connect your wallet first');
+		}
+	};
+
 	const handleGetNfts = async () => {
 		if ($user) {
-			const nftss = await getNFTs($user.addr);
-			console.log('nfts', nftss);
-			nfts = nftss;
+			const userNfts = await getNFTs($user.addr);
+			nfts = userNfts;
+		} else {
+			alert('Please connect your wallet first');
 		}
 	};
 </script>
 
-<Card.Root maxWidth="40ch">
+<Card.Root maxWidth="80ch">
 	<Card.Section>
 		<span class="w-medium small">Non Fungible Token DApp</span>
 	</Card.Section>
@@ -34,10 +46,8 @@
 			>In order to receive your NFTs you should first setup a vault for the collection.</span
 		>
 		<div class="row-2">
-			<Button size="small" on:click={() => executeTransaction(() => setupCollection())}
-				>Setup Vault</Button
-			>
-			<!-- <ChangeGreetingCodeModal /> -->
+			<Button size="small" on:click={handleSetupCollection}>Setup Vault</Button>
+			<SetupCollectionCodeModal />
 		</div>
 	</Card.Section>
 	<Card.Section>
@@ -56,7 +66,7 @@
 		>
 		<div class="row-2">
 			<Button size="small" on:click={handleGetNfts}>Get NFTs</Button>
-			<!-- <ChangeGreetingCodeModal /> -->
+			<GetNftsCodeModal />
 		</div>
 	</Card.Section>
 	<Card.Section>

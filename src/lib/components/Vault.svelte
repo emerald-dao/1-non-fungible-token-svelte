@@ -6,13 +6,15 @@
 	export let nfts: NFT[];
 </script>
 
-<div class="main-wrapper column-4">
+<div class="main-wrapper column-3">
 	{#if $user?.addr}
-		<span class="title small w-medium">Vault</span>
+		<span class="title small w-medium">Your NFTs Vault</span>
 		{#if nfts.length > 0}
-			{#each nfts as nft}
-				<NftCard {nft} />
-			{/each}
+			<div class="nfts-wrapper">
+				{#each nfts as nft}
+					<NftCard {nft} />
+				{/each}
+			</div>
 		{:else}
 			<span class="small"><em>Your vault is empty</em></span>
 		{/if}
@@ -27,6 +29,12 @@
 		border: 1px solid var(--clr-primary-main);
 		border-radius: var(--radius-2);
 		padding: var(--space-5);
+
+		.nfts-wrapper {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: var(--space-4);
+		}
 
 		.title {
 			color: var(--clr-primary-main);
