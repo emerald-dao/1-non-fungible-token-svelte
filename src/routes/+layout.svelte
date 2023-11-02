@@ -51,7 +51,7 @@
 	{logIn}
 	{unauthenticate}
 	logoUrl="/ea-logo.png"
-	logoText="Non Fungible Token Quickstart"
+	logoText="Emerald Academy"
 />
 <main>
 	<section class="container-small">
