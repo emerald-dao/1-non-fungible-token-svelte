@@ -37,6 +37,14 @@
 				"mainnet": "0x1d7e57aa55817448"
 			}
 		},
+		"ViewResolver": {
+			"source": "./src/lib/flow/cadence/contracts/utility/ViewResolver.cdc",
+			"aliases": {
+				"emulator": "0xf8d6e0586b0a20c7",
+				"testnet": "0x631e88ae7f1d7c20",
+				"mainnet": "0x1d7e57aa55817448"
+			}
+		},
 		"ExampleNFT": {
 			"source": "./src/lib/flow/cadence/contracts/ExampleNFT.cdc",
 			"aliases": {
