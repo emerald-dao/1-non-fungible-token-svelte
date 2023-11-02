@@ -13,6 +13,7 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
 
     pub let CollectionStoragePath: StoragePath
     pub let CollectionPublicPath: PublicPath
+    pub let MinterStoragePath: StoragePath
 
     pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver {
         pub let id: UInt64
@@ -110,7 +111,7 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
         // deposit takes a NFT and adds it to the collections dictionary
         // and adds the ID to the id array
         pub fun deposit(token: @NonFungibleToken.NFT) {
-            let token <- token as! @ExampleNFT.NFT
+            let token: @NFT <- token as! @ExampleNFT.NFT
 
             let id: UInt64 = token.uuid
 
@@ -132,8 +133,8 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
         }
 
         pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
-            let nft = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
-            let exampleNFT = nft as! &ExampleNFT.NFT
+            let nft: auth &NonFungibleToken.NFT = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
+            let exampleNFT: &NFT = nft as! &ExampleNFT.NFT
             return exampleNFT as &AnyResource{MetadataViews.Resolver}
         }
 
@@ -151,32 +152,33 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
         return <- create Collection()
     }
 
-    // mintNFT mints a new NFT with a new ID
-    // and deposit it in the recipients collection using their collection reference
-    pub fun mintNFT(
-        recipient: &ExampleNFT.Collection{NonFungibleToken.CollectionPublic},
-        name: String,
-        description: String,
-        thumbnail: String,
-        extraMetadata: {String: AnyStruct}
-    ) {
-        let currentBlock = getCurrentBlock()
-        extraMetadata["mintedBlock"] = currentBlock.height
-        extraMetadata["mintedTime"] = currentBlock.timestamp
-        extraMetadata["minter"] = recipient.owner!.address
+    pub resource Minter {
+        // mintNFT mints a new NFT with a new ID
+        // and deposit it in the recipients collection using their collection reference
+        pub fun mintNFT(
+            recipient: &ExampleNFT.Collection{NonFungibleToken.CollectionPublic},
+            name: String,
+            description: String,
+            thumbnail: String,
+            extraMetadata: {String: AnyStruct}
+        ) {
+            let currentBlock: Block = getCurrentBlock()
+            extraMetadata["mintedBlock"] = currentBlock.height
+            extraMetadata["mintedTime"] = currentBlock.timestamp
+            extraMetadata["minter"] = recipient.owner!.address
 
-        // create a new NFT
-        var newNFT <- create NFT(
-            name: name,
-            description: description,
-            thumbnail: thumbnail,
-            extraMetadata: extraMetadata
-        )
+            // create a new NFT
+            var newNFT: @NFT <- create NFT(
+                name: name,
+                description: description,
+                thumbnail: thumbnail,
+                extraMetadata: extraMetadata
+            )
 
-        // deposit it in the recipient's account using their reference
-        recipient.deposit(token: <-newNFT)
+            // deposit it in the recipient's account using their reference
+            recipient.deposit(token: <- newNFT)
+        }
     }
-    
 
     pub fun getViews(): [Type] {
         return [
@@ -227,6 +229,9 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
         // Set the named paths
         self.CollectionStoragePath = /storage/EmeraldAcademyNonFungibleTokenCollection
         self.CollectionPublicPath = /public/EmeraldAcademyNonFungibleTokenCollection
+        self.MinterStoragePath = /storage/EmeraldAcademyNonFungibleTokenMinter
+
+        self.account.save(<- create Minter(), to: self.MinterStoragePath)
 
         emit ContractInitialized()
     }

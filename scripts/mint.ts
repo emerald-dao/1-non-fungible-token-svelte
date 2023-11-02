@@ -22,10 +22,15 @@ async function mintScript(recipient: string) {
             import ExampleNFT from ${EXAMPLE_NFT_CONTRACT_ADDRESS}
             import NonFungibleToken from ${NON_FUNGIBLE_TOKEN_CONTRACT_ADDRESS}
 
+            // the signer must be a minter for the ExampleNFT contract
             transaction(names: [String], descriptions: [String], thumbnails: [String], recipient: Address) {
+
+                let Minter: &ExampleNFT.Minter
                 let RecipientCollection: &ExampleNFT.Collection{NonFungibleToken.CollectionPublic}
                 
                 prepare(signer: AuthAccount) {
+                    self.Minter = signer.borrow<&ExampleNFT.Minter>(from: ExampleNFT.MinterStoragePath)
+                                        ?? panic("The signer does not have an ExampleNFT Minter.")
                     self.RecipientCollection = getAccount(recipient).getCapability(ExampleNFT.CollectionPublicPath)
                                                 .borrow<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic}>()
                                                 ?? panic("The recipient has not set up an ExampleNFT Collection yet.")
@@ -35,7 +40,7 @@ async function mintScript(recipient: string) {
                     var i = 0
                     while i < names.length {
                         let extraMetadata: {String: AnyStruct} = {}
-                        ExampleNFT.mintNFT(recipient: self.RecipientCollection, name: names[i], description: descriptions[i], thumbnail: thumbnails[i], extraMetadata: extraMetadata)
+                        self.Minter.mintNFT(recipient: self.RecipientCollection, name: names[i], description: descriptions[i], thumbnail: thumbnails[i], extraMetadata: extraMetadata)
                         i = i + 1
                     }
                 }
