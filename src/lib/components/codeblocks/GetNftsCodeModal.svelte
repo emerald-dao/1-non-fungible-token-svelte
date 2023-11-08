@@ -17,7 +17,7 @@
 	];
 </script>
 
-<CodeBlockModal id="get-greeting-transaction" {codeBlocks} codeBlockType="script">
+<CodeBlockModal id="get-nfts-script" {codeBlocks} codeBlockType="script">
 	<div class="column-2">
 		<h3 class="large"><strong>getNfts</strong> script</h3>
 		<p class="small">

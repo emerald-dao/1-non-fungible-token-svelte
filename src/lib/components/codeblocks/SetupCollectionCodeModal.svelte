@@ -17,7 +17,7 @@
 	];
 </script>
 
-<CodeBlockModal id="change-greeting-transaction" {codeBlocks} codeBlockType="transaction">
+<CodeBlockModal id="setup-collection-transaction" {codeBlocks} codeBlockType="transaction">
 	<div class="column-2">
 		<h3><strong>setupCollection</strong> transaction</h3>
 		<p class="small">

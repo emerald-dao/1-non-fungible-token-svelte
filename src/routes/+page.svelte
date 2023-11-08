@@ -1,6 +1,6 @@
 <script type="ts">
-	import GetNftsCodeModal from '$lib/components/GetNftsCodeModal.svelte';
-	import SetupCollectionCodeModal from '$lib/components/SetupCollectionCodeModal.svelte';
+	import GetNftsCodeModal from '$lib/components/codeblocks/GetNftsCodeModal.svelte';
+	import SetupCollectionCodeModal from '$lib/components/codeblocks/SetupCollectionCodeModal.svelte';
 	import getNFTs from '$flow/actions/getNfts';
 	import setupCollection from '$flow/actions/setupCollection';
 	import executeTransaction from '$flow/utils/executeTransaction';
@@ -41,7 +41,7 @@
 		<span class="w-medium small">Non Fungible Token DApp</span>
 	</Card.Section>
 	<Card.Section>
-		<span class="w-medium small">1. Set up your collection</span>
+		<span class="w-medium small">1. Setup Your Collection</span>
 		<span class="small">In order to receive your NFTs you must first setup a collection.</span>
 		<div class="row-2">
 			<Button size="small" on:click={handleSetupCollection}>Setup Collection</Button>
@@ -49,7 +49,7 @@
 		</div>
 	</Card.Section>
 	<Card.Section>
-		<span class="w-medium small">2. Mint NFTs to your account.</span>
+		<span class="w-medium small">2. Mint NFTs to Your Account</span>
 		<span class="small">
 			Time to go back to your terminal! Look for the scripts directory and execute the
 			<code>mint</code>
@@ -58,9 +58,9 @@
 	</Card.Section>
 	<Card.Section>
 		<span class="w-medium small">3. Get NFTs</span>
-		<span class="small"
-			>Now, we are going to run a script to get all the NFTs stored in your collection.</span
-		>
+		<span class="small">
+			Now, we are going to run a script to get all the NFTs stored in your collection.
+		</span>
 		<div class="row-2">
 			<Button size="small" on:click={handleGetNfts}>Get NFTs</Button>
 			<GetNftsCodeModal />
@@ -68,10 +68,10 @@
 	</Card.Section>
 	<Card.Section>
 		<span class="w-medium small">4. Your NFTs</span>
-		<span class="small"
-			>Bellow, you can find the NFTs stored in your collection. Feel free to transfer them other
-			wallets!</span
-		>
+		<span class="small">
+			Bellow, you can find the NFTs stored in your collection. Feel free to transfer them other
+			wallets!
+		</span>
 		<Collection {nfts} />
 	</Card.Section>
 </Card.Root>
