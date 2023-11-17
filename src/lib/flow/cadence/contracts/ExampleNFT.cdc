@@ -1,7 +1,7 @@
-import NonFungibleToken from "./utility/NonFungibleToken.cdc"
-import MetadataViews from "./utility/MetadataViews.cdc"
-import FungibleToken from "./utility/FungibleToken.cdc"
-import ViewResolver from "./utility/ViewResolver.cdc"
+import "NonFungibleToken"
+import "MetadataViews"
+import "FungibleToken"
+import "ViewResolver"
 
 pub contract ExampleNFT: NonFungibleToken, ViewResolver {
 
