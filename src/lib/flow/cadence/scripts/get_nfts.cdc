@@ -1,5 +1,5 @@
-import ExampleNFT from "../contracts/ExampleNFT.cdc"
-import MetadataViews from "../contracts/utility/MetadataViews.cdc"
+import "ExampleNFT"
+import "MetadataViews"
 
 pub fun main(address: Address): [NFT] {
   let collection = getAccount(address).getCapability(ExampleNFT.CollectionPublicPath)

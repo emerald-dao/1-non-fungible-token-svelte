@@ -1,10 +1,9 @@
 import * as fcl from '@onflow/fcl';
 import setupColectionTx from '../cadence/transactions/setup_collection.cdc?raw';
-import replaceWithProperImports from '$flow/utils/replaceWithProperImports';
 
 async function setupCollection() {
 	const transactionId = await fcl.mutate({
-		cadence: replaceWithProperImports(setupColectionTx),
+		cadence: setupColectionTx,
 		args: (arg, t) => [],
 		proposer: fcl.authz,
 		payer: fcl.authz,

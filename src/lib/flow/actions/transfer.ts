@@ -1,10 +1,9 @@
 import * as fcl from '@onflow/fcl';
 import transferTx from '../cadence/transactions/transfer.cdc?raw';
-import replaceWithProperImports from '$flow/utils/replaceWithProperImports';
 
-async function transfer(recipient, withdrawID) {
+async function transfer(recipient: string, withdrawID: string) {
 	const transactionId = await fcl.mutate({
-		cadence: replaceWithProperImports(transferTx),
+		cadence: transferTx,
 		args: (arg, t) => [arg(recipient, t.Address), arg(withdrawID, t.UInt64)],
 		proposer: fcl.authz,
 		payer: fcl.authz,

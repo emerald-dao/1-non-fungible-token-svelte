@@ -1,6 +1,7 @@
 import { config } from '@onflow/fcl';
 import dappInfo from '$lib/config/dappData';
 import { env } from '$env/dynamic/public';
+import flowJSON from "../../../flow.json";
 
 export const network: 'mainnet' | 'testnet' | 'emulator' = env.PUBLIC_FLOW_NETWORK as
 	| 'mainnet'
@@ -34,4 +35,4 @@ config({
 	// include Dapper Wallet and Ledger.
 	// Docs: https://developers.flow.com/tools/clients/fcl-js/api#more-configuration
 	'discovery.authn.include': fclConfigInfo[network].discoveryAuthInclude
-});
+}).load({ flowJSON });

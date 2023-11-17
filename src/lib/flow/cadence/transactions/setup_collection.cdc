@@ -1,6 +1,6 @@
-import ExampleNFT from "../contracts/ExampleNFT.cdc"
-import NonFungibleToken from "../contracts/utility/NonFungibleToken.cdc"
-import MetadataViews from "../contracts/utility/MetadataViews.cdc"
+import "ExampleNFT"
+import "NonFungibleToken"
+import "MetadataViews"
 
 transaction() {
   

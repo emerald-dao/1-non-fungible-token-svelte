@@ -1,5 +1,5 @@
-import ExampleNFT from "../contracts/ExampleNFT.cdc"
-import NonFungibleToken from "../contracts/utility/NonFungibleToken.cdc"
+import "ExampleNFT"
+import "NonFungibleToken"
 
 transaction(recipient: Address, withdrawID: UInt64) {
   let SenderCollection: &ExampleNFT.Collection

@@ -1,7 +1,7 @@
 require('dotenv').config();
 import { serverAuthorization } from './flow/utils/authorization';
 import { mutate } from '@onflow/fcl';
-import { EXAMPLE_NFT_CONTRACT_ADDRESS, NON_FUNGIBLE_TOKEN_CONTRACT_ADDRESS } from './flow/config';
+import './flow/config';
 
 async function mintScript(recipient: string) {
     const names = ['Education', 'Building', 'Governance'];
@@ -19,8 +19,8 @@ async function mintScript(recipient: string) {
     try {
         const transactionId = await mutate({
             cadence: `
-            import ExampleNFT from ${EXAMPLE_NFT_CONTRACT_ADDRESS}
-            import NonFungibleToken from ${NON_FUNGIBLE_TOKEN_CONTRACT_ADDRESS}
+            import "ExampleNFT"
+            import "NonFungibleToken"
 
             // the signer must be a minter for the ExampleNFT contract
             transaction(names: [String], descriptions: [String], thumbnails: [String], recipient: Address) {

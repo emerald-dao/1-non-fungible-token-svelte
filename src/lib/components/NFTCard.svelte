@@ -4,7 +4,6 @@
 	import type { NFT } from '$lib/types/nft.interface';
 	import { Button } from '@emerald-dao/component-library';
 	import * as Card from '$lib/components/Card';
-	import TransferCodeModal from './codeblocks/TransferCodeModal.svelte';
 
 	export let nft: NFT;
 </script>

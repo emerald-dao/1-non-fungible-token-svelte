@@ -1,13 +1,12 @@
 import { config } from '@onflow/fcl';
-import flowJson from '../../flow.json';
+import flowJSON from '../../flow.json';
 
 export const network: 'mainnet' | 'testnet' | 'emulator' = process.env.PUBLIC_FLOW_NETWORK as
     | 'mainnet'
     | 'testnet'
     | 'emulator' || 'emulator';
 
-export const EXAMPLE_NFT_CONTRACT_ADDRESS = flowJson.contracts.ExampleNFT.aliases[network];
-export const NON_FUNGIBLE_TOKEN_CONTRACT_ADDRESS = flowJson.contracts.NonFungibleToken.aliases[network];
+export const EXAMPLE_NFT_CONTRACT_ADDRESS = flowJSON.contracts.ExampleNFT.aliases[network];
 
 const fclConfigInfo = {
     emulator: {
@@ -24,4 +23,4 @@ const fclConfigInfo = {
 config({
     'flow.network': network,
     'accessNode.api': fclConfigInfo[network].accessNode
-});
+}).load({ flowJSON });
